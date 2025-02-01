@@ -4,30 +4,36 @@ const socket = io("https://ballistic-hip-value.glitch.me"); // Signaling server
 const peerConnection = new RTCPeerConnection({
     iceServers: [
         { urls: "stun:stun.l.google.com:19302" }, // Public STUN
-        {
-            urls: "turn:TURN_SERVER_URL",
-            username: "USERNAME",
-            credential: "PASSWORD"
-        } // Replace with a real TURN server
+        // {
+        //     urls: "turn:TURN_SERVER_URL",
+        //     username: "USERNAME",
+        //     credential: "PASSWORD"
+        // } 
     ]
 });
 
 const localVideo = document.getElementById("localVideo");
 const remoteVideo = document.getElementById("remoteVideo");
 
+
 // Get local video/audio with proper mobile support
 async function setupLocalStream() {
     try {
-        const constraints = {
-            video: { facingMode: "user" }, // "user" = Front Camera, "environment" = Back Camera
-            audio: true
-        };
+        // const constraints = {
+        //     video: { facingMode: "user" }, // "user" = Front Camera, "environment" = Back Camera
+        //     audio: true
+        // };
+        const constraints = { video: true, audio: true };
 
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
         localVideo.srcObject = stream;
 
         // Add tracks to WebRTC connection
-        stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+        stream.getTracks().forEach(track => {
+            console.log(track);
+
+            peerConnection.addTrack(track, stream)
+        });
 
     } catch (error) {
         console.error("Error accessing camera/microphone:", error);
