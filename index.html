@@ -4,58 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WebRTC Video Chat</title>
-  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script> <style>
-    body {
-      font-family: sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      background-color: #f0f0f0;
-      margin: 0; /* Remove default margin */
-    }
-
-    h2 {
-      margin-bottom: 20px;
-      color: #333; /* Darker heading color */
-    }
-
-    video {
-      border: 3px solid #ccc; /* Add border to videos */
-      margin: 10px;
-      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Add shadow */
-      border-radius: 8px; /* Rounded corners */
-      max-width: 480px; /* Limit video width for responsiveness */
-      height: auto;
-    }
-
-    #localVideo {
-      transform: scaleX(-1); /* Mirror local video */
-    }
-
-    button {
-      padding: 10px 20px;
-      background-color: #007bff; /* Blue button */
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s ease; /* Smooth transition */
-    }
-
-    button:hover {
-      background-color: #0056b3; /* Darker blue on hover */
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      video {
-        max-width: 90%; /* Make videos almost full width on smaller screens */
-      }
-    }
-  </style>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script> <!-- Load Socket.io client -->
 </head>
 <body>
   
@@ -66,5 +15,7 @@
 
   <button onclick="startCall()">Start Call</button>
 
-  <script src="videocon.js"></script> </body>
+  <script src="videocon.js"></script> <!-- External WebRTC script -->
+
+</body>
 </html>

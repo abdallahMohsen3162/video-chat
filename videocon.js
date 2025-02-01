@@ -5,7 +5,7 @@ const peerConnection = new RTCPeerConnection({
     iceServers: [
         { urls: "stun:stun.l.google.com:19302" }, // Public STUN
         {
-            urls: "stun.webcalldirect.com:3478",
+            urls: "turn:TURN_SERVER_URL",
             username: "USERNAME",
             credential: "PASSWORD"
         } // Replace with a real TURN server
