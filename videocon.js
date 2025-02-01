@@ -3,38 +3,33 @@ const socket = io("https://ballistic-hip-value.glitch.me"); // Signaling server
 // WebRTC configuration with TURN servers
 const peerConnection = new RTCPeerConnection({
     iceServers: [
-        { urls: "stun:stun.l.google.com:19302" }, // Public STUN
-        // {
-        //     urls: "turn:TURN_SERVER_URL",
-        //     username: "USERNAME",
-        //     credential: "PASSWORD"
-        // } 
+        { urls: "stun:stun.l.google.com:19302" },
+        // TURN server configuration (if needed)
     ]
 });
 
 const localVideo = document.getElementById("localVideo");
 const remoteVideo = document.getElementById("remoteVideo");
 
+// Store the local stream globally so that it is only set up once
+let localStream = null;
 
 // Get local video/audio with proper mobile support
 async function setupLocalStream() {
+    if (localStream) return localStream; // Already set up
+
     try {
-        // const constraints = {
-        //     video: { facingMode: "user" }, // "user" = Front Camera, "environment" = Back Camera
-        //     audio: true
-        // };
         const constraints = { video: true, audio: true };
+        localStream = await navigator.mediaDevices.getUserMedia(constraints);
+        localVideo.srcObject = localStream;
 
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
-        localVideo.srcObject = stream;
-
-        // Add tracks to WebRTC connection
-        stream.getTracks().forEach(track => {
-            console.log(track);
-
-            peerConnection.addTrack(track, stream)
+        // Add tracks to the RTCPeerConnection
+        localStream.getTracks().forEach(track => {
+            console.log("Adding track:", track);
+            peerConnection.addTrack(track, localStream);
         });
 
+        return localStream;
     } catch (error) {
         console.error("Error accessing camera/microphone:", error);
     }
@@ -67,8 +62,10 @@ async function startCall() {
 // Handle incoming signaling messages
 socket.on("notification", async(msg) => {
     if (msg.type === "offer") {
+        // Set up local stream if it hasn't been already (avoid adding tracks twice)
         await setupLocalStream();
 
+        // Set the remote description with the incoming offer
         await peerConnection.setRemoteDescription(new RTCSessionDescription(msg.data));
         const answer = await peerConnection.createAnswer();
         await peerConnection.setLocalDescription(answer);
